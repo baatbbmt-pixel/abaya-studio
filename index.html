@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>استوديو العبايات — نظام الإدارة</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --brand:#1a1208;--brand-mid:#6b3a1f;--brand-soft:#c9a882;--brand-pale:#f7f0e8;--brand-pale2:#fdf8f3;
+  --rose:#993556;--rose-pale:#fbeaf0;--cream:#faf7f3;
+  --green:#27500A;--green-pale:#EAF3DE;
+  --amber:#633806;--amber-pale:#FAEEDA;
+  --red:#791F1F;--red-pale:#FCEBEB;
+  --blue:#0C447C;--blue-pale:#E6F1FB;
+  --border:rgba(0,0,0,0.1);--border2:rgba(0,0,0,0.2);
+  --text:#1a1208;--text2:#6b5a4e;--text3:#a08070;
+  --bg:#faf7f3;--bg2:#fff;--bg3:#f5f0ea;
+  --radius:10px;--radius-lg:14px;
+}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;direction:rtl}
+body.en{direction:ltr;font-family:'Tajawal',sans-serif}
+
+/* ── SHELL ── */
+.shell{max-width:430px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;background:var(--bg);position:relative}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--brand);padding:0 16px;height:58px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:100}
+.tlogo{display:flex;align-items:center;gap:10px}
+.tmark{width:32px;height:32px;border-radius:9px;background:var(--brand-soft);display:flex;align-items:center;justify-content:center}
+.tmark i{font-size:17px;color:var(--brand)}
+.tname{font-size:15px;font-weight:700;color:#f7f0e8}
+.tsub{font-size:10px;opacity:.5;color:#f7f0e8;display:block;margin-top:-2px}
+.tright{display:flex;align-items:center;gap:6px}
+.lang-btn{padding:4px 10px;border-radius:6px;font-size:11px;border:0.5px solid rgba(201,168,130,.35);background:none;color:#c9a882;cursor:pointer;font-family:'Tajawal',sans-serif;transition:.2s}
+.lang-btn.on{background:rgba(201,168,130,.2);color:#f7f0e8;border-color:rgba(201,168,130,.55)}
+.ticon{font-size:19px;color:#c9a882;cursor:pointer;padding:6px;position:relative}
+.ticon .dot{position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%;background:#E24B4A;border:1.5px solid var(--brand)}
+
+/* ── NAV ── */
+.nav{display:flex;background:var(--brand);border-top:0.5px solid rgba(201,168,130,.12);overflow-x:auto;flex-shrink:0;position:sticky;top:58px;z-index:99}
+.nav::-webkit-scrollbar{display:none}
+.nb{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 10px 10px;font-size:9px;color:rgba(201,168,130,.4);border:none;background:none;cursor:pointer;min-width:54px;border-top:2px solid transparent;font-family:'Tajawal',sans-serif;white-space:nowrap;transition:.15s}
+.nb i{font-size:18px}
+.nb.on{color:#f7f0e8;border-top-color:var(--brand-soft)}
+
+/* ── BODY ── */
+.body{flex:1;padding:14px;overflow-y:auto}
+.sc{display:none}.sc.on{display:block}
+
+/* ── SECTION LABEL ── */
+.sec{font-size:10px;letter-spacing:.8px;color:var(--text3);margin-bottom:8px;margin-top:16px;text-transform:uppercase;font-weight:500}
+.sec:first-child{margin-top:0}
+
+/* ── KPI ── */
+.krow{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
+.kpi{background:var(--bg2);border-radius:var(--radius-lg);border:0.5px solid var(--border);padding:12px 14px}
+.kl{font-size:10px;color:var(--text3);margin-bottom:3px}
+.kv{font-size:22px;font-weight:700;color:var(--brand-mid)}
+.ks{font-size:10px;color:var(--text3);margin-top:2px}
+.kv.red{color:var(--red)}.kv.amber{color:var(--amber)}.kv.green{color:var(--green)}
+
+/* ── CARDS ── */
+.card{background:var(--bg2);border-radius:var(--radius-lg);border:0.5px solid var(--border);margin-bottom:10px}
+.cp{padding:14px}
+
+/* ── ROWS ── */
+.row{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--bg2);border-radius:var(--radius-lg);border:0.5px solid var(--border);margin-bottom:7px;cursor:pointer;transition:.15s}
+.row:active{background:var(--bg3)}
+.av{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.av i{font-size:17px}
+.av.br{background:var(--brand-pale)}.av.br i{color:var(--brand-mid)}
+.av.am{background:var(--amber-pale)}.av.am i{color:var(--amber)}
+.av.bl{background:var(--blue-pale)}.av.bl i{color:var(--blue)}
+.av.gn{background:var(--green-pale)}.av.gn i{color:var(--green)}
+.av.rs{background:var(--rose-pale)}.av.rs i{color:var(--rose)}
+.ri{flex:1;min-width:0}
+.rn{font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rs2{font-size:11px;color:var(--text3);margin-top:1px}
+.re{text-align:left;flex-shrink:0}
+body.en .re{text-align:right}
+.rv{font-size:13px;font-weight:700;color:var(--text)}
+.ru{font-size:10px;color:var(--text3)}
+
+/* ── TAGS ── */
+.tag{display:inline-block;font-size:10px;padding:3px 9px;border-radius:20px;font-weight:500;margin-top:2px}
+.tok{background:var(--green-pale);color:var(--green)}
+.tlo{background:var(--amber-pale);color:var(--amber)}
+.tout{background:var(--red-pale);color:var(--red)}
+.tpn{background:var(--blue-pale);color:var(--blue)}
+.tdn{background:var(--green-pale);color:var(--green)}
+.tlt{background:var(--red-pale);color:var(--red)}
+.tav{background:var(--green-pale);color:var(--green)}
+.tby{background:var(--amber-pale);color:var(--amber)}
+.tfl{background:var(--red-pale);color:var(--red)}
+
+/* ── ALERTS ── */
+.alert{display:flex;gap:10px;align-items:flex-start;padding:11px 13px;background:var(--bg2);border-radius:var(--radius-lg);border:0.5px solid var(--border);margin-bottom:7px;border-right-width:3px}
+body.en .alert{border-right-width:0.5px;border-left-width:3px}
+.alert.red{border-right-color:#E24B4A}
+.alert.amb{border-right-color:#EF9F27}
+body.en .alert.red{border-left-color:#E24B4A}
+body.en .alert.amb{border-left-color:#EF9F27}
+.alert i{font-size:16px;margin-top:1px;flex-shrink:0}
+.alert.red i{color:var(--red)}
+.alert.amb i{color:var(--amber)}
+.at{font-size:13px;font-weight:500;color:var(--text)}
+.as2{font-size:11px;color:var(--text3);margin-top:2px}
+
+/* ── BUTTONS ── */
+.btn{width:100%;padding:12px;border:none;border-radius:var(--radius-lg);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;font-family:'Tajawal',sans-serif;margin-top:8px;transition:.15s}
+.btn:active{transform:scale(.98)}
+.btn.main{background:var(--brand);color:#f7f0e8}
+.btn.ghost{background:none;color:var(--brand-mid);border:0.5px solid var(--brand-soft)}
+.btn.wa{background:#25D366;color:white}
+.btn.rose{background:var(--rose);color:white}
+.btn.danger{background:var(--red);color:white}
+
+/* ── FORM ── */
+.flbl{font-size:11px;color:var(--text3);margin-bottom:4px;margin-top:12px;display:block;letter-spacing:.2px}
+.flbl:first-child{margin-top:0}
+.fi{width:100%;padding:10px 12px;border-radius:var(--radius);border:0.5px solid var(--border);font-size:13px;background:var(--bg2);color:var(--text);font-family:'Tajawal',sans-serif;transition:.15s}
+.fi:focus{outline:none;border-color:var(--brand-mid);box-shadow:0 0 0 3px rgba(107,58,31,.1)}
+.f2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.sep{height:0.5px;background:var(--border);margin:14px 0}
+
+/* ── ABAYA GRID ── */
+.agrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:10px}
+.atile{background:var(--bg2);border-radius:var(--radius-lg);border:0.5px solid var(--border);overflow:hidden;cursor:pointer;transition:.15s}
+.atile:active{transform:scale(.98)}
+.aimg{height:100px;display:flex;align-items:center;justify-content:center;position:relative;background:var(--brand-pale)}
+.aimg i{font-size:40px;opacity:.2;color:var(--brand)}
+.aimg img{width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0}
+.cam-hint{position:absolute;bottom:5px;right:5px;background:rgba(26,18,8,.55);color:#f7f0e8;font-size:9px;padding:2px 6px;border-radius:4px;display:flex;align-items:center;gap:3px}
+body.en .cam-hint{right:auto;left:5px}
+.ainfo{padding:10px}
+.aname{font-size:12px;font-weight:700;color:var(--text)}
+.asku{font-size:10px;color:var(--text3);margin-top:1px;font-family:monospace;letter-spacing:.5px}
+.aprice{font-size:13px;color:var(--brand-mid);font-weight:700;margin-top:3px}
+.aszrow{display:flex;gap:3px;flex-wrap:wrap;margin-top:6px}
+.szchip{display:flex;flex-direction:column;align-items:center;padding:3px 6px;border-radius:5px;background:var(--brand-pale);border:0.5px solid #e8d5bc;min-width:30px}
+.szchip.empty{background:var(--red-pale);border-color:#F7C1C1}
+.szletter{font-size:9px;font-weight:700;color:var(--brand-mid)}
+.szchip.empty .szletter{color:var(--red)}
+.szqty{font-size:9px;color:var(--text3)}
+.szchip.empty .szqty{color:var(--red)}
+
+/* ── SIZE MANAGER ── */
+.sz-manager{background:var(--bg2);border-radius:var(--radius-lg);border:0.5px solid var(--border);padding:13px;margin-bottom:10px}
+.sz-list{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px;min-height:36px}
+.sz-item{display:flex;align-items:center;gap:5px;background:var(--brand-pale);border:0.5px solid var(--brand-soft);border-radius:8px;padding:5px 9px}
+.sz-item input{width:56px;border:none;background:none;font-size:12px;font-weight:700;color:var(--brand);font-family:'Tajawal',sans-serif;padding:0}
+.sz-item input:focus{outline:none}
+.sz-del{font-size:13px;color:var(--brand-soft);cursor:pointer;border:none;background:none;line-height:1;padding:0 2px}
+.sz-add{display:flex;align-items:center;gap:6px}
+.sz-add input{flex:1;padding:8px 10px;border-radius:8px;border:0.5px solid var(--border);font-size:12px;background:var(--bg2);color:var(--text);font-family:'Tajawal',sans-serif}
+.sz-add input:focus{outline:none;border-color:var(--brand-mid)}
+.sz-add button{padding:8px 14px;border-radius:8px;background:var(--brand);color:#f7f0e8;border:none;font-size:12px;cursor:pointer;font-family:'Tajawal',sans-serif;font-weight:700}
+
+/* ── UPLOAD ── */
+.upload-zone{border:1.5px dashed var(--brand-soft);border-radius:var(--radius-lg);padding:20px;text-align:center;background:var(--brand-pale);cursor:pointer;margin-top:6px;transition:.15s}
+.upload-zone:hover{background:var(--brand-pale2)}
+.upload-zone i{font-size:26px;color:var(--brand-soft);margin-bottom:6px;display:block}
+.upload-zone p{font-size:12px;color:var(--text3)}
+.upload-zone span{font-size:10px;color:var(--brand-soft)}
+.thumbs{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.thumb{width:58px;height:58px;border-radius:9px;background:var(--brand-pale);display:flex;align-items:center;justify-content:center;border:0.5px solid var(--brand-soft);position:relative;overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb i{font-size:22px;opacity:.25;color:var(--brand)}
+.thumb .mb{position:absolute;bottom:2px;right:2px;background:var(--brand);color:#f7f0e8;font-size:8px;padding:1px 4px;border-radius:3px}
+
+/* ── ORDER CARD ── */
+.ocard{background:var(--bg2);border-radius:var(--radius-lg);border:0.5px solid var(--border);margin-bottom:10px;overflow:hidden}
+.ohead{padding:12px 14px 10px;border-bottom:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start}
+.otitle{font-size:13px;font-weight:700;color:var(--text)}
+.ometa{font-size:11px;color:var(--text3);margin-top:2px}
+.obody{padding:12px 14px}
+.odet{font-size:12px;color:var(--text3);margin-bottom:4px;display:flex;gap:6px;align-items:flex-start}
+.odet i{font-size:13px;color:var(--brand-soft);flex-shrink:0;margin-top:1px}
+.pbar{height:4px;background:var(--brand-pale);border-radius:2px;margin:10px 0 4px}
+.pfill{height:100%;border-radius:2px;background:var(--brand-mid);transition:width .3s}
+.plabs{display:flex;justify-content:space-between;font-size:10px;color:var(--text3)}
+.wabox{background:#f0faf4;border-radius:var(--radius);border:0.5px solid #b8dba8;padding:12px;margin-top:10px}
+.wahd{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#27500A;margin-bottom:8px}
+.wahd i{font-size:15px}
+.waimg-row{display:flex;gap:5px;margin-bottom:8px}
+.waimg{width:50px;height:50px;border-radius:8px;background:var(--brand-pale);display:flex;align-items:center;justify-content:center;border:0.5px solid #b8dba8;overflow:hidden}
+.waimg i{font-size:22px;opacity:.25;color:var(--brand)}
+.watxt{font-size:11px;color:#3B6D11;line-height:1.65;white-space:pre-wrap;font-family:'Tajawal',sans-serif}
+
+/* ── TAILOR ── */
+.tcard{background:var(--bg2);border-radius:var(--radius-lg);border:0.5px solid var(--border);padding:13px 14px;margin-bottom:8px;cursor:pointer;transition:.15s}
+.tcard.sel{border-color:var(--brand-mid);background:var(--brand-pale)}
+.ttop{display:flex;align-items:center;gap:10px}
+.tav{width:38px;height:38px;border-radius:50%;background:var(--brand-pale);border:0.5px solid var(--brand-soft);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--brand-mid);flex-shrink:0}
+.tinfo{flex:1}
+.tn{font-size:13px;font-weight:700;color:var(--text)}
+.ts{font-size:11px;color:var(--text3)}
+.tstats{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-top:10px;padding-top:10px;border-top:0.5px solid var(--border);text-align:center}
+.tsv{font-size:14px;font-weight:700;color:var(--text)}
+.tsl{font-size:10px;color:var(--text3)}
+
+/* ── BARCODE ── */
+.bctypes{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.bct{background:var(--bg2);border-radius:var(--radius-lg);border:0.5px solid var(--border);padding:12px;text-align:center;cursor:pointer;transition:.15s}
+.bct.on{border-color:var(--brand-mid);background:var(--brand-pale)}
+.bct i{font-size:22px;color:var(--brand-soft);margin-bottom:5px;display:block}
+.bct.on i{color:var(--brand-mid)}
+.bctl{font-size:12px;font-weight:700;color:var(--text)}
+.bcts{font-size:10px;color:var(--text3);margin-top:2px}
+.bcprev{background:white;border-radius:var(--radius);border:0.5px solid var(--border);padding:14px;text-align:center;margin:10px 0}
+.bccode{font-size:10px;letter-spacing:2px;font-family:monospace;color:#888;margin-top:5px}
+.bcname{font-size:12px;font-weight:700;color:var(--text);margin-top:3px}
+.bcsku{font-size:10px;color:var(--text3);margin-top:2px;font-family:monospace}
+
+/* ── PLANS ── */
+.hero{background:var(--brand);border-radius:var(--radius-lg);padding:24px 18px;margin-bottom:14px;text-align:center}
+.hero-mark{width:52px;height:52px;border-radius:14px;background:var(--brand-soft);display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+.hero-mark i{font-size:26px;color:var(--brand)}
+.hero h2{font-size:19px;font-weight:700;color:#f7f0e8;margin-bottom:5px}
+.hero p{font-size:12px;color:rgba(247,240,232,.55);line-height:1.5}
+.plan{background:var(--bg2);border-radius:var(--radius-lg);border:0.5px solid var(--border);padding:16px;margin-bottom:10px}
+.plan.featured{border:2px solid var(--brand-mid)}
+.pbadge{font-size:10px;padding:3px 10px;border-radius:20px;background:var(--brand-pale);color:var(--brand-mid);font-weight:700;display:inline-block;margin-bottom:8px}
+.pbadge.pop{background:var(--brand-mid);color:#f7f0e8}
+.pname{font-size:17px;font-weight:700;color:var(--text)}
+.pprice{font-size:30px;font-weight:700;color:var(--brand);margin:4px 0 2px}
+.pprice span{font-size:13px;color:var(--text3);font-weight:400}
+.pdesc{font-size:11px;color:var(--text3);margin-bottom:13px}
+.flist{list-style:none}
+.flist li{font-size:12px;color:var(--text3);padding:5px 0;display:flex;gap:7px;align-items:flex-start;border-bottom:0.5px solid var(--border)}
+.flist li:last-child{border:none}
+.flist li i{font-size:13px;color:var(--brand-mid);flex-shrink:0;margin-top:1px}
+
+/* ── REPORTS ── */
+.rptile{background:var(--bg2);border-radius:var(--radius-lg);border:0.5px solid var(--border);padding:12px 14px;margin-bottom:7px;display:flex;align-items:center;gap:11px;cursor:pointer;transition:.15s}
+.rptile:active{background:var(--bg3)}
+.inv-line{display:flex;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid var(--border);font-size:13px}
+.inv-line:last-child{border:none}
+.il{color:var(--text3)}
+.iv{font-weight:700;color:var(--text)}
+
+/* ── FABRIC CALC ── */
+.faccalc{background:var(--brand-pale);border-radius:var(--radius);border:0.5px solid var(--brand-soft);padding:12px 14px;margin-top:10px}
+.fcrow{display:flex;justify-content:space-between;font-size:12px;padding:3px 0}
+.fcl{color:var(--brand-mid)}.fcv{font-weight:700;color:var(--brand)}
+.fctot{display:flex;justify-content:space-between;font-size:13px;font-weight:700;border-top:0.5px solid var(--brand-soft);margin-top:6px;padding-top:7px}
+
+/* ── PILLS ── */
+.pills{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px}
+.pills::-webkit-scrollbar{display:none}
+.pill{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:500;border:0.5px solid var(--border);background:var(--bg2);color:var(--text3);cursor:pointer;white-space:nowrap;font-family:'Tajawal',sans-serif;transition:.15s}
+.pill.on{background:var(--brand);color:#f7f0e8;border-color:var(--brand)}
+
+/* ── PERM ── */
+.prow{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:0.5px solid var(--border)}
+.prow:last-child{border:none}
+.pav{width:32px;height:32px;border-radius:50%;background:var(--brand-pale);border:0.5px solid var(--brand-soft);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--brand-mid);flex-shrink:0}
+.pname{flex:1;font-size:13px;color:var(--text)}
+.prole{font-size:10px;padding:3px 9px;border-radius:20px;font-weight:500}
+.prole.adm{background:#EEEDFE;color:#3C3489}
+.prole.mgr{background:#E6F1FB;color:#0C447C}
+.prole.brn{background:var(--green-pale);color:var(--green)}
+.prole.tl{background:var(--brand-pale);color:var(--brand-mid)}
+
+/* ── TRANSFER ── */
+.transfer-arrow{text-align:center;padding:6px 0;font-size:22px;color:var(--brand-soft)}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div class="topbar">
+  <div class="tlogo">
+    <div class="tmark"><i class="ti ti-hanger" aria-hidden="true"></i></div>
+    <div>
+      <div class="tname" id="tname">استوديو العبايات</div>
+      <div class="tsub" id="tsub">نظام الإدارة المتكامل</div>
+    </div>
+  </div>
+  <div class="tright">
+    <button class="lang-btn on" onclick="setLang('ar')" id="lbtn-ar">ع</button>
+    <button class="lang-btn" onclick="setLang('en')" id="lbtn-en">EN</button>
+    <div class="ticon"><i class="ti ti-bell" aria-hidden="true"></i><div class="dot"></div></div>
+  </div>
+</div>
+
+<div class="nav" id="mainnav">
+  <button class="nb on" onclick="go('home',this)"><i class="ti ti-layout-dashboard" aria-hidden="true"></i><span data-t="home">الرئيسية</span></button>
+  <button class="nb" onclick="go('abayas',this)"><i class="ti ti-hanger" aria-hidden="true"></i><span data-t="abayas">العبايات</span></button>
+  <button class="nb" onclick="go('fabric',this)"><i class="ti ti-scissors" aria-hidden="true"></i><span data-t="fabric">الأقمشة</span></button>
+  <button class="nb" onclick="go('orders',this)"><i class="ti ti-needle-thread" aria-hidden="true"></i><span data-t="orders">الإنتاج</span></button>
+  <button class="nb" onclick="go('tailors',this)"><i class="ti ti-users" aria-hidden="true"></i><span data-t="tailors">الخياطون</span></button>
+  <button class="nb" onclick="go('transfer',this)"><i class="ti ti-arrows-transfer-up" aria-hidden="true"></i><span data-t="transfer">النقل</span></button>
+  <button class="nb" onclick="go('barcode',this)"><i class="ti ti-barcode" aria-hidden="true"></i><span data-t="barcode">باركود</span></button>
+  <button class="nb" onclick="go('invoices',this)"><i class="ti ti-file-invoice" aria-hidden="true"></i><span data-t="invoices">الفواتير</span></button>
+  <button class="nb" onclick="go('reports',this)"><i class="ti ti-chart-bar" aria-hidden="true"></i><span data-t="reports">تقارير</span></button>
+  <button class="nb" onclick="go('settings',this)"><i class="ti ti-settings" aria-hidden="true"></i><span data-t="settings">الإعدادات</span></button>
+</div>
+
+<div class="body" id="mainbody">
+
+<!-- ══ HOME ══ -->
+<div id="s-home" class="sc on">
+  <div class="krow">
+    <div class="kpi"><div class="kl" data-t="total_ab">إجمالي العبايات</div><div class="kv" id="kpi-total">—</div><div class="ks" data-t="all_branches">جميع الفروع</div></div>
+    <div class="kpi"><div class="kl" data-t="stock_val">قيمة المخزون</div><div class="kv" id="kpi-val">—</div><div class="ks" data-t="sar">ر.س</div></div>
+    <div class="kpi"><div class="kl" data-t="prod_orders">طلبات إنتاج</div><div class="kv amber" id="kpi-orders">—</div><div class="ks" data-t="in_prog">قيد التنفيذ</div></div>
+    <div class="kpi"><div class="kl" data-t="low_stock">مخزون منخفض</div><div class="kv red" id="kpi-low">—</div><div class="ks" data-t="need_reorder">يحتاج تجديد</div></div>
+  </div>
+  <div class="sec" data-t="alerts">تنبيهات</div>
+  <div id="alerts-list"></div>
+  <div class="sec" data-t="branches">الفروع</div>
+  <div id="branches-list"></div>
+</div>
+
+<!-- ══ ABAYAS ══ -->
+<div id="s-abayas" class="sc">
+  <div class="sec" data-t="size_sys">نظام المقاسات — اكتب ما تريد</div>
+  <div class="sz-manager">
+    <div class="sz-list" id="sz-list"></div>
+    <div class="sz-add">
+      <input id="sz-inp" data-ph-ar="أضف مقاس... S أو 44 أو XL" data-ph-en="Add size... S or 44 or XL" placeholder="أضف مقاس... S أو 44 أو XL"/>
+      <button onclick="addSize()" data-t="add">إضافة</button>
+    </div>
+  </div>
+  <div class="sec" data-t="products">المنتجات</div>
+  <div class="pills">
+    <button class="pill on" data-t="all">الكل</button>
+    <button class="pill" data-t="klosh">كلوش</button>
+    <button class="pill" data-t="farasha">فراشة</button>
+    <button class="pill" data-t="bahraini">بحرينية</button>
+  </div>
+  <div class="agrid" id="abaya-grid"></div>
+  <button class="btn main" onclick="go('add-abaya',null)"><i class="ti ti-plus" aria-hidden="true"></i><span data-t="add_abaya">إضافة عباية جديدة</span></button>
+</div>
+
+<!-- ══ ADD ABAYA ══ -->
+<div id="s-add-abaya" class="sc">
+  <div class="sec" data-t="add_abaya">إضافة عباية جديدة</div>
+  <div class="card cp">
+    <label class="flbl" data-t="abaya_name">اسم العباية</label>
+    <input class="fi" id="new-name" data-ph-ar="مثال: عباية كلوش مطرزة" data-ph-en="e.g. Embroidered Klosh Abaya" placeholder="مثال: عباية كلوش مطرزة"/>
+    <div class="f2">
+      <div><label class="flbl">SKU</label><input class="fi" id="new-sku" placeholder="AB-005"/></div>
+      <div><label class="flbl" data-t="price">السعر (ر.س)</label><input class="fi" type="number" id="new-price" placeholder="350"/></div>
+    </div>
+    <div class="f2">
+      <div><label class="flbl" data-t="fabric_type">نوع القماش</label><input class="fi" id="new-fabric" data-ph-ar="كريب، جورجيت..." data-ph-en="Crepe, Georgette..." placeholder="كريب، جورجيت..."/></div>
+      <div><label class="flbl" data-t="color">اللون</label><input class="fi" id="new-color" data-ph-ar="أسود، عاجي..." data-ph-en="Black, Ivory..." placeholder="أسود، عاجي..."/></div>
+    </div>
+    <label class="flbl" data-t="prod_cost">تكلفة الإنتاج (ر.س)</label>
+    <input class="fi" type="number" id="new-cost" placeholder="180"/>
+    <label class="flbl" data-t="min_alert">حد التنبيه (مجموع)</label>
+    <input class="fi" type="number" id="new-min" placeholder="10"/>
+    <div class="sep"></div>
+    <div class="sec" style="margin-top:0" data-t="sizes_qty">المقاسات والكميات</div>
+    <div id="new-sizes-fields" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px"></div>
+    <div class="sep"></div>
+    <label class="flbl" data-t="product_imgs">صور المنتج</label>
+    <div class="upload-zone" onclick="document.getElementById('img-upload').click()">
+      <i class="ti ti-photo-up" aria-hidden="true"></i>
+      <p data-t="drag_imgs">اسحب الصور أو اضغط للرفع</p>
+      <span>PNG, JPG — صورة رئيسية + تفاصيل</span>
+    </div>
+    <input type="file" id="img-upload" accept="image/*" multiple style="display:none" onchange="previewImgs(this)"/>
+    <div class="thumbs" id="img-thumbs">
+      <div class="thumb" style="border-style:dashed;background:none;cursor:pointer" onclick="document.getElementById('img-upload').click()">
+        <i class="ti ti-plus" aria-hidden="true" style="opacity:.35;font-size:20px"></i>
+      </div>
+    </div>
+    <div class="sep"></div>
+    <button class="btn main" onclick="saveAbaya()"><i class="ti ti-device-floppy" aria-hidden="true"></i><span data-t="save">حفظ المنتج</span></button>
+    <button class="btn ghost" onclick="go('abayas',document.querySelectorAll('.nb')[1])"><i class="ti ti-x" aria-hidden="true"></i><span data-t="cancel">إلغاء</span></button>
+  </div>
+</div>
+
+<!-- ══ FABRIC ══ -->
+<div id="s-fabric" class="sc">
+  <div class="sec" data-t="fabric_stock">مخزون الأقمشة</div>
+  <div id="fabric-list"></div>
+  <div class="sec" data-t="fabric_calc_title">احتساب الأقمشة لطلب جديد</div>
+  <div class="card cp">
+    <label class="flbl" data-t="select_abaya_calc">اختر العباية</label>
+    <select class="fi" id="calc-abaya" onchange="rebuildFabricCalcFields()">
+      <option value="">—</option>
+    </select>
+    <div id="fabric-qty-fields" style="display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin:10px 0 8px"></div>
+    <div class="faccalc" id="faccalc-box" style="display:none">
+      <div style="font-size:11px;font-weight:700;color:var(--brand-mid);margin-bottom:8px;display:flex;align-items:center;gap:5px"><i class="ti ti-calculator" aria-hidden="true" style="font-size:13px"></i><span data-t="auto_calc">احتساب تلقائي</span></div>
+      <div id="fab-calc-rows"></div>
+      <div class="fctot"><span class="fcl" data-t="total_units">إجمالي العبايات</span><span class="fcv" id="fc-tot">0</span></div>
+    </div>
+  </div>
+  <button class="btn main" onclick="go('add-fabric',null)"><i class="ti ti-plus" aria-hidden="true"></i><span data-t="add_material">إضافة قماش / مستهلكات</span></button>
+</div>
+
+<!-- ══ ADD FABRIC ══ -->
+<div id="s-add-fabric" class="sc">
+  <div class="sec" data-t="add_material">إضافة قماش أو مستهلكات</div>
+  <div class="card cp">
+    <label class="flbl" data-t="mat_name">الاسم</label>
+    <input class="fi" id="fab-name" data-ph-ar="مثال: قماش كريب أسود" data-ph-en="e.g. Black Crepe Fabric" placeholder="مثال: قماش كريب أسود"/>
+    <label class="flbl">SKU</label>
+    <input class="fi" id="fab-sku" placeholder="FK-005"/>
+    <div class="f2">
+      <div><label class="flbl" data-t="qty">الكمية</label><input class="fi" type="number" id="fab-qty" placeholder="100"/></div>
+      <div><label class="flbl" data-t="unit">الوحدة</label><select class="fi" id="fab-unit"><option data-t="meter">متر</option><option data-t="piece">قطعة</option><option data-t="spool">بكرة</option><option data-t="kg">كيلو</option></select></div>
+    </div>
+    <div class="f2">
+      <div><label class="flbl" data-t="min_alert">حد التنبيه</label><input class="fi" type="number" id="fab-min" placeholder="50"/></div>
+      <div><label class="flbl" data-t="supplier">المورد</label><input class="fi" id="fab-supplier" data-ph-ar="اسم المورد" data-ph-en="Supplier name" placeholder="اسم المورد"/></div>
+    </div>
+    <label class="flbl" data-t="fabric_per_size">استهلاك القماش لكل مقاس (للإنتاج)</label>
+    <div id="fab-per-size-fields" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:6px"></div>
+    <button class="btn main" style="margin-top:14px" onclick="saveFabric()"><i class="ti ti-device-floppy" aria-hidden="true"></i><span data-t="save">حفظ</span></button>
+    <button class="btn ghost" onclick="go('fabric',document.querySelectorAll('.nb')[2])"><i class="ti ti-x" aria-hidden="true"></i><span data-t="cancel">إلغاء</span></button>
+  </div>
+</div>
+
+<!-- ══ ORDERS ══ -->
+<div id="s-orders" class="sc">
+  <div class="sec" data-t="active_orders">الطلبات النشطة</div>
+  <div id="orders-list"></div>
+  <button class="btn main" onclick="go('add-order',null)"><i class="ti ti-plus" aria-hidden="true"></i><span data-t="new_order">طلب إنتاج جديد</span></button>
+</div>
+
+<!-- ══ ADD ORDER ══ -->
+<div id="s-add-order" class="sc">
+  <div class="sec" data-t="new_order">طلب إنتاج جديد</div>
+  <div class="card cp">
+    <label class="flbl" data-t="select_abaya_calc">اختر العباية</label>
+    <select class="fi" id="ord-abaya" onchange="rebuildOrderSizeFields()">
+      <option value="">—</option>
+    </select>
+    <div class="sep"></div>
+    <div class="sec" style="margin-top:0" data-t="sizes_qty">المقاسات والكميات</div>
+    <div id="ord-size-fields" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:8px"></div>
+    <div class="sep"></div>
+    <label class="flbl" data-t="select_tailor">اختر الخياط</label>
+    <select class="fi" id="ord-tailor">
+      <option value="">—</option>
+    </select>
+    <label class="flbl" data-t="tailor_phone">رقم الخياط (واتساب)</label>
+    <input class="fi" id="ord-phone" placeholder="05xxxxxxxx"/>
+    <div class="f2">
+      <div><label class="flbl" data-t="deadline">موعد التسليم</label><input class="fi" type="date" id="ord-date"/></div>
+      <div><label class="flbl" data-t="prod_cost">تكلفة الإنتاج</label><input class="fi" type="number" id="ord-cost" placeholder="0"/></div>
+    </div>
+    <label class="flbl" data-t="notes">ملاحظات</label>
+    <input class="fi" id="ord-notes" data-ph-ar="أي تعليمات للخياط..." data-ph-en="Any instructions for tailor..." placeholder="أي تعليمات للخياط..."/>
+    <button class="btn main" onclick="saveOrder()"><i class="ti ti-send" aria-hidden="true"></i><span data-t="save_send">حفظ وإرسال للخياط</span></button>
+    <button class="btn ghost" onclick="go('orders',document.querySelectorAll('.nb')[3])"><i class="ti ti-x" aria-hidden="true"></i><span data-t="cancel">إلغاء</span></button>
+  </div>
+</div>
+
+<!-- ══ TAILORS ══ -->
+<div id="s-tailors" class="sc">
+  <div class="sec" data-t="tailors_list">قائمة الخياطين</div>
+  <div id="tailors-list"></div>
+  <button class="btn main" onclick="go('add-tailor',null)"><i class="ti ti-plus" aria-hidden="true"></i><span data-t="add_tailor">إضافة خياط جديد</span></button>
+</div>
+
+<!-- ══ ADD TAILOR ══ -->
+<div id="s-add-tailor" class="sc">
+  <div class="sec" data-t="add_tailor">إضافة خياط جديد</div>
+  <div class="card cp">
+    <label class="flbl" data-t="tailor_name">الاسم</label>
+    <input class="fi" id="t-name" data-ph-ar="اسم الخياط أو الورشة" data-ph-en="Tailor or workshop name" placeholder="اسم الخياط أو الورشة"/>
+    <label class="flbl" data-t="tailor_phone">رقم الواتساب</label>
+    <input class="fi" id="t-phone" placeholder="05xxxxxxxx" type="tel"/>
+    <label class="flbl" data-t="speciality">التخصص</label>
+    <input class="fi" id="t-spec" data-ph-ar="مثال: كلوش · فراشة · مطرز" data-ph-en="e.g. Klosh · Farasha" placeholder="مثال: كلوش · فراشة"/>
+    <label class="flbl" data-t="capacity">الطاقة الإنتاجية اليومية (قطعة)</label>
+    <input class="fi" id="t-cap" type="number" placeholder="10"/>
+    <button class="btn main" onclick="saveTailor()"><i class="ti ti-device-floppy" aria-hidden="true"></i><span data-t="save">حفظ</span></button>
+    <button class="btn ghost" onclick="go('tailors',document.querySelectorAll('.nb')[4])"><i class="ti ti-x" aria-hidden="true"></i><span data-t="cancel">إلغاء</span></button>
+  </div>
+</div>
+
+<!-- ══ TRANSFER ══ -->
+<div id="s-transfer" class="sc">
+  <div class="sec" data-t="new_transfer">نقل مخزون بين الفروع</div>
+  <div class="card cp">
+    <label class="flbl" data-t="from_branch">من فرع</label>
+    <select class="fi" id="tr-from">
+      <option data-t="main_warehouse">المستودع الرئيسي</option>
+      <option data-t="riyadh_branch">فرع الرياض</option>
+      <option data-t="jeddah_branch">فرع جدة</option>
+    </select>
+    <div class="transfer-arrow"><i class="ti ti-arrow-down" aria-hidden="true"></i></div>
+    <label class="flbl" data-t="to_branch">إلى فرع</label>
+    <select class="fi" id="tr-to">
+      <option data-t="riyadh_branch">فرع الرياض</option>
+      <option data-t="jeddah_branch">فرع جدة</option>
+      <option data-t="dammam_branch">فرع الدمام</option>
+    </select>
+    <label class="flbl" data-t="product">المنتج</label>
+    <select class="fi" id="tr-product"></select>
+    <label class="flbl" data-t="size">المقاس</label>
+    <select class="fi" id="tr-size"></select>
+    <div class="f2">
+      <div><label class="flbl" data-t="qty">الكمية</label><input class="fi" type="number" id="tr-qty" placeholder="0" min="1"/></div>
+      <div><label class="flbl" data-t="ship_date">تاريخ الشحن</label><input class="fi" type="date" id="tr-date"/></div>
+    </div>
+    <label class="flbl" data-t="notes">ملاحظات</label>
+    <input class="fi" id="tr-notes" data-ph-ar="اختياري..." data-ph-en="Optional..." placeholder="اختياري..."/>
+    <button class="btn main" onclick="saveTransfer()"><i class="ti ti-send" aria-hidden="true"></i><span data-t="confirm_transfer">تأكيد النقل</span></button>
+  </div>
+  <div class="sec" data-t="transfer_history">سجل النقل</div>
+  <div id="transfer-list"></div>
+</div>
+
+<!-- ══ BARCODE ══ -->
+<div id="s-barcode" class="sc">
+  <div class="sec" data-t="bc_type">نوع الباركود</div>
+  <div class="bctypes">
+    <div class="bct on" onclick="selBC(this,'sale')"><i class="ti ti-tag" aria-hidden="true"></i><div class="bctl" data-t="bc_sale">باركود البيع</div><div class="bcts" data-t="bc_sale_sub">عباية + مقاس + سعر</div></div>
+    <div class="bct" onclick="selBC(this,'cons')"><i class="ti ti-box" aria-hidden="true"></i><div class="bctl" data-t="bc_cons">المستهلكات</div><div class="bcts" data-t="bc_cons_sub">تغليف + مواد</div></div>
+    <div class="bct" onclick="selBC(this,'fabric')"><i class="ti ti-ripple" aria-hidden="true"></i><div class="bctl" data-t="bc_fab">الأقمشة</div><div class="bcts" data-t="bc_fab_sub">قماش + كمية</div></div>
+    <div class="bct" onclick="selBC(this,'ship')"><i class="ti ti-truck" aria-hidden="true"></i><div class="bctl" data-t="bc_ship">شحن ونقل</div><div class="bcts" data-t="bc_ship_sub">شحنة + وجهة</div></div>
+  </div>
+  <div class="card cp">
+    <label class="flbl" data-t="select_product">اختر المنتج</label>
+    <select class="fi" id="bc-sel" onchange="updateBC()"><option value="">—</option></select>
+    <label class="flbl" data-t="size">المقاس</label>
+    <select class="fi" id="bc-sz" onchange="updateBC()"></select>
+    <div class="bcprev" id="bcprev" style="display:none">
+      <canvas id="bcc" width="220" height="55" style="display:block;margin:0 auto 5px"></canvas>
+      <div class="bccode" id="bccodel"></div>
+      <div class="bcname" id="bcnamel"></div>
+      <div class="bcsku" id="bcskul"></div>
+    </div>
+    <div class="f2" style="margin-top:10px">
+      <div><label class="flbl" data-t="copies">عدد النسخ</label><input type="number" class="fi" id="bc-copies" value="1" min="1"/></div>
+      <div><label class="flbl" data-t="branch">الفرع</label>
+        <select class="fi">
+          <option data-t="riyadh_branch">الرياض</option>
+          <option data-t="jeddah_branch">جدة</option>
+          <option data-t="main_warehouse">مستودع</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn main" onclick="printBarcode()"><i class="ti ti-printer" aria-hidden="true"></i><span data-t="print_bc">طباعة الباركود</span></button>
+    <button class="btn ghost"><i class="ti ti-scan" aria-hidden="true"></i><span data-t="scan_bc">مسح باركود</span></button>
+  </div>
+</div>
+
+<!-- ══ INVOICES ══ -->
+<div id="s-invoices" class="sc">
+  <div class="pills">
+    <button class="pill on" onclick="filterInv('all',this)" data-t="all">الكل</button>
+    <button class="pill" onclick="filterInv('pending',this)" data-t="pending">معلقة</button>
+    <button class="pill" onclick="filterInv('paid',this)" data-t="paid">مدفوعة</button>
+    <button class="pill" onclick="filterInv('late',this)" data-t="late_p">متأخرة</button>
+  </div>
+  <div id="invoices-list"></div>
+  <button class="btn main" onclick="go('add-invoice',null)"><i class="ti ti-plus" aria-hidden="true"></i><span data-t="add_inv">إضافة فاتورة</span></button>
+</div>
+
+<!-- ══ ADD INVOICE ══ -->
+<div id="s-add-invoice" class="sc">
+  <div class="sec" data-t="add_inv">إضافة فاتورة</div>
+  <div class="card cp">
+    <label class="flbl" data-t="supplier">المورد / الجهة</label>
+    <input class="fi" id="inv-supplier" data-ph-ar="اسم المورد" data-ph-en="Supplier name" placeholder="اسم المورد"/>
+    <label class="flbl" data-t="inv_desc">البيان</label>
+    <input class="fi" id="inv-desc" data-ph-ar="مثال: قماش كريب 200م" data-ph-en="e.g. Crepe fabric 200m" placeholder="مثال: قماش كريب 200م"/>
+    <div class="f2">
+      <div><label class="flbl" data-t="amount">المبلغ (ر.س)</label><input class="fi" type="number" id="inv-amount" placeholder="0"/></div>
+      <div><label class="flbl" data-t="inv_date">التاريخ</label><input class="fi" type="date" id="inv-date"/></div>
+    </div>
+    <label class="flbl" data-t="status">الحالة</label>
+    <select class="fi" id="inv-status">
+      <option value="pending" data-t="pending">معلقة</option>
+      <option value="paid" data-t="paid">مدفوعة</option>
+      <option value="late" data-t="late_p">متأخرة</option>
+    </select>
+    <button class="btn main" onclick="saveInvoice()"><i class="ti ti-device-floppy" aria-hidden="true"></i><span data-t="save">حفظ الفاتورة</span></button>
+    <button class="btn ghost" onclick="go('invoices',document.querySelectorAll('.nb')[7])"><i class="ti ti-x" aria-hidden="true"></i><span data-t="cancel">إلغاء</span></button>
+  </div>
+</div>
+
+<!-- ══ REPORTS ══ -->
+<div id="s-reports" class="sc">
+  <div class="sec" data-t="financial_summary">ملخص مالي</div>
+  <div class="card cp" id="financial-summary"></div>
+  <div class="sec" data-t="reports_sec">التقارير</div>
+  <div class="rptile" onclick="showReport('sizes')"><div class="av br"><i class="ti ti-chart-bar" aria-hidden="true"></i></div><div class="ri"><div class="rn" data-t="rpt1">مخزون بالمقاسات والفروع</div><div class="rs2" data-t="rpt1s">كل مقاس في كل فرع</div></div><i class="ti ti-chevron-left" aria-hidden="true" style="color:var(--text3)"></i></div>
+  <div class="rptile" onclick="showReport('costs')"><div class="av gn"><i class="ti ti-chart-pie" aria-hidden="true"></i></div><div class="ri"><div class="rn" data-t="rpt2">تكاليف الإنتاج والأرباح</div><div class="rs2" data-t="rpt2s">تكلفة + هامش لكل تصميم</div></div><i class="ti ti-chevron-left" aria-hidden="true" style="color:var(--text3)"></i></div>
+  <div class="rptile" onclick="showReport('tailors')"><div class="av am"><i class="ti ti-needle-thread" aria-hidden="true"></i></div><div class="ri"><div class="rn" data-t="rpt3">أداء الخياطين</div><div class="rs2" data-t="rpt3s">إنتاج والتزام بالمواعيد</div></div><i class="ti ti-chevron-left" aria-hidden="true" style="color:var(--text3)"></i></div>
+  <div class="rptile" onclick="showReport('transfers')"><div class="av bl"><i class="ti ti-arrows-transfer-up" aria-hidden="true"></i></div><div class="ri"><div class="rn" data-t="rpt4">النقل بين الفروع</div><div class="rs2" data-t="rpt4s">شحنات الدخول والخروج</div></div><i class="ti ti-chevron-left" aria-hidden="true" style="color:var(--text3)"></i></div>
+  <div id="report-output"></div>
+</div>
+
+<!-- ══ SETTINGS ══ -->
+<div id="s-settings" class="sc">
+  <div class="sec" data-t="company_info">معلومات الشركة</div>
+  <div class="card cp">
+    <label class="flbl" data-t="company_name">اسم الشركة</label>
+    <input class="fi" id="st-company" data-ph-ar="اسم شركتك" data-ph-en="Your company name" placeholder="اسم شركتك"/>
+    <label class="flbl" data-t="company_phone">رقم الهاتف</label>
+    <input class="fi" id="st-phone" placeholder="05xxxxxxxx" type="tel"/>
+    <button class="btn main" onclick="saveSettings()"><i class="ti ti-device-floppy" aria-hidden="true"></i><span data-t="save">حفظ</span></button>
+  </div>
+  <div class="sec" data-t="permissions">المستخدمون والصلاحيات</div>
+  <div class="card cp" id="users-list"></div>
+  <div class="sep"></div>
+  <div class="sec" data-t="data_mgmt">إدارة البيانات</div>
+  <button class="btn ghost" onclick="exportData()"><i class="ti ti-download" aria-hidden="true"></i><span data-t="export_data">تصدير كل البيانات (JSON)</span></button>
+  <button class="btn danger" style="margin-top:6px" onclick="clearData()"><i class="ti ti-trash" aria-hidden="true"></i><span data-t="clear_data">مسح كل البيانات</span></button>
+</div>
+
+</div><!-- /body -->
+</div><!-- /shell -->
+
+<script src="app.js"></script>
+</body>
+</html>
